@@ -1,7 +1,8 @@
 # Gostarter
 
 Gostarter is a starter project for my go projects.
-It setup a project using [Huma]() framework and [React]() using [vite] for the frontend.
+It setup a project using [Huma](https://huma.rocks) framework and React using 
+[vite](https://vitejs.dev) for the frontend.
 For simplicity sake the React app is embed in the Go binary so it can be all deploy with a single binary.
 
 ## Getting Started
