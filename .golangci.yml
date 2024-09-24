@@ -1,0 +1,78 @@
+run:
+  # Include test files
+  tests: true
+
+  # With the read-only mode linter will fail if go.mod file is outdated.
+  modules-download-mode: readonly
+
+  allow-parallel-runners: false
+
+output:
+  # Getting deterministic output.
+  sort-results: true 
+
+issues:
+  # When enabled linter will skip directories: vendor$, third_party$, testdata$, examples$, Godeps$, builtin$.
+  # See custom exlude-dirs list bellow.
+  exclude-dirs-use-default: false
+
+  # Which dirs to exclude: issues from them won't be reported.
+  exclude-dirs:
+    - web # Non Go code
+    - testdata
+
+  # Don't skip linters errors
+  max-issues-per-linter: 0
+
+  # Don't skip linters errors
+  max-same-issues: 0
+
+  # Don't use autofix, let dev fix the errors
+  fix: false
+
+linters:
+  # disable de default config
+  disable-all: true
+
+  enable:
+    # Bugs linters
+    - durationcheck # Check for two durations multiplied together.
+    - bidichk # Checks for dangerous unicode character sequences.
+    - asasalint # Check for pass []any as any in variadic func(...any).
+    - reassign # Checks that package variables are not reassigned.
+    - rowserrcheck # Checks whether Rows.Err of rows is checked successfully.
+    - sqlclosecheck # Checks that sql.Rows, sql.Stmt, sqlx.NamedStmt, pgx.Query are closed.
+    - bodyclose # Checks whether HTTP response body is closed successfully.
+    - contextcheck # Check whether the function uses a non-inherited context.
+    - errcheck # Forces to not skip error check.
+    - predeclared # Finds shadowing of Go's predeclared identifiers.
+
+    # Style linters
+    - copyloopvar # Detects places where loop variables are copied (for >= go 1.22).
+    - godot # Forces to put `.` at the end of the comment.
+    - gofmt
+    - gofumpt
+    - goimports
+    - misspell # Fix all the misspells.
+    - nakedret # Finds naked/bare returns and requires change them.
+    - errname # Checks `Err-` prefix for var and `-Error` suffix for error type.
+    - errorlint # Suggests to use `%w` for error-wrapping.
+    - gosimple # Linter that specializes in simplifying code.
+    - ineffassign # Detects when assignments to existing variables are not used
+    - noctx # Finds sending HTTP request without context.Context.
+    - prealloc # Finds slices that could potentially be pre-allocated.
+    - nolintlint # Forces comment why another check is disabled.
+    - tenv # Detects using os.Setenv instead of t.Setenv since Go1.17.
+    - thelper # Detects tests helpers which is not start with t.Helper().
+    - tparallel # Detects inappropriate usage of t.Parallel().
+    - unconvert # Detect unnecessary type conversions
+    - unparam # Detect unused function parameters
+    - unused # Detect unused constants, variables, functions and types
+    - usestdlibvars # Detect the possibility to use variables/constants from stdlib.
+    - gomoddirectives # Manage the use of 'replace', 'retract', and 'excludes' directives in go.mod.
+    - sloglint # Ensure consistent code style when using log/slog.
+
+    # Meta linters
+    - revive
+    - govet # Official Go tool.
+    - staticcheck

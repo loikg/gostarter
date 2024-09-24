@@ -1,0 +1,72 @@
+version: '3'
+
+vars:
+  GOLANGCI_VERSION: v1.61.0
+
+tasks:
+
+  dev:
+    desc: Run the app with auto reload for development
+    watch: true
+    deps: ['build']
+    cmds:
+      - cmd: ./api
+        ignore_error: true
+        
+  build:
+    internal: true
+    desc: 'Build the entire app'
+    deps: ['build:api']
+
+  build:web:
+    internal: true
+    desc: Build the JS SPA in the web folder
+    dir: './web'
+    sources:
+      - './src/**/*.*'
+    generates:
+      - './dist/**/*.*'
+    cmds:
+      - bun install
+      - bun run build
+
+  build:api:
+    internal: true
+    desc: 'Build the Go app'
+    deps: [build:web]
+    sources:
+      - './**/*.go'
+      - './*.go'
+      - './go.mod'
+      - './go.sum'
+    generates:
+      - './api'
+    cmds:
+      - cmd: go build ./cmd/api
+
+  lint:web:
+    internal: true
+    dir: './web'
+    cmds:
+      - bun lint
+
+  format:web:
+    internal: true
+    dir: './web'
+    cmds:
+      - bun format:check
+
+  lint:api:
+    internal: true
+    cmds:
+      - go run github.com/golangci/golangci-lint/cmd/golangci-lint@{{.GOLANGCI_VERSION}} run
+
+  lint:
+    internal: true
+    deps: ['lint:api', 'lint:web']
+
+  test:
+    desc: 'Run linter, formatter and tests'
+    deps: [build, lint, 'format:web']
+    cmds:
+      - go test -race -shuffle=on -v ./...
